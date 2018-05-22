@@ -58,7 +58,7 @@ The result would be
 </svg>
 ```
 
-Assuming you've embeded this SVG in the page with `<use>`:
+Assuming you've embeded this SVG in the page and referenced the symbol with `<use>`:
 
 ```
 <div class="checkbox">
