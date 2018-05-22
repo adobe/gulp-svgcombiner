@@ -14,6 +14,7 @@ var through = require('through2');
 var extend = require('xtend');
 var path = require('path');
 var File = require('vinyl');
+var PluginError = require('plugin-error');
 var svgcombiner = require('svgcombiner');
 
 module.exports = function(options) {
@@ -41,7 +42,7 @@ module.exports = function(options) {
 
     // we don't do streams
     if (file.isStream()) {
-      this.emit('error', new Error('gulp-svgcombiner: Streaming not supported'));
+      this.emit('error', new PluginError('gulp-svgcombiner', 'Streaming not supported'));
       cb();
       return;
     }

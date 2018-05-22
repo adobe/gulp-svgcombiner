@@ -15,6 +15,7 @@ var fs = require('fs');
 var format = require('xml-formatter');
 var path = require('path');
 var File = require('vinyl');
+var vfs = require('vinyl-fs');
 var svgcombiner = require('../index.js');
 
 function getFakeFile(filePath) {
@@ -23,6 +24,29 @@ function getFakeFile(filePath) {
     contents: new Buffer(fs.readFileSync(filePath, 'utf8'))
   });
 }
+
+test.cb('should emit error on streamed file', t => {
+  var combiner = svgcombiner({
+    processName: function(filePath) {
+      return 'spectrum-css-icon-' + path.basename(filePath, path.extname(filePath)).replace(/S_UI(.*?)_.*/, '$1');
+    },
+    processClass: function(filePath) {
+      // Return the last directory
+      return 'spectrum-UIIcon--' + path.dirname(filePath).split(path.sep).pop();
+    }
+  });
+
+  // wait for the file to come back out
+  vfs.src('test/medium/S_UICornerTriangle_5_N@1x.svg' , {
+      buffer: false
+    })
+    .pipe(combiner)
+    .once('error', (err) => {
+      t.is(err.message, 'Streaming not supported');
+      t.end();
+    });
+});
+
 
 test.cb('should define default processName and processClass', function(t) {
   // Create the fake files
@@ -76,6 +100,28 @@ test.cb('should combine SVGs', function(t) {
 
     // check the contents
     t.is(format(file.contents.toString('utf8')), format(fs.readFileSync('test/CornerTriangle.svg', 'utf8')));
+    t.end();
+  });
+});
+
+test('should ignore empty files', function(t) {
+  t.plan(0);
+  // Create the fake files
+  var emptyFile = new File({
+    path: 'test/medium/S_UICornerTriangle_5_N@1x.svg',
+    contents: ''
+  });
+
+  // Create a plugin stream
+  var combiner = svgcombiner();
+
+  // write the fake file to it
+  combiner.write(emptyFile);
+  combiner.end();
+
+  // wait for the file to come back out
+  combiner.once('data', function(file) {
+    t.is(true);
     t.end();
   });
 });

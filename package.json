@@ -4,17 +4,22 @@
   "description": "A gulp plugin for svgcombiner",
   "main": "index.js",
   "scripts": {
-    "test": "node_modules/.bin/ava test/*.js --verbose"
+    "test": "nyc ava test/*.js --verbose",
+    "coverage": "nyc report -r lcovonly && codecov"
   },
   "author": "Larry Davis <lawdavis@adobe.com>",
   "license": "Apache-2.0",
   "dependencies": {
+    "plugin-error": "^1.0.1",
     "through2": "^2.0.3",
-    "xtend": "^4.0.1",
-    "vinyl": "^2.1.0"
+    "vinyl": "^2.1.0",
+    "xtend": "^4.0.1"
   },
   "devDependencies": {
     "ava": "^0.25.0",
+    "codecov": "^3.0.2",
+    "nyc": "^11.8.0",
+    "vinyl-fs": "^3.0.3",
     "xml-formatter": "^1.0.1"
   }
 }
