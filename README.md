@@ -130,3 +130,11 @@ This function serves two purposes:
 2. Name your icons
 
 For instance, if you have an icon naming convention that includes the size of the icon, your `processName` function should remove the size of the icon from the name, as well as strip the extension and any other irrelevant text.
+
+### Contributing
+
+Contributions are welcomed! Read the [Contributing Guide](.github/CONTRIBUTING.md) for more information.
+
+### Licensing
+
+This project is licensed under the Apache V2 License. See [LICENSE](LICENSE) for more information.
