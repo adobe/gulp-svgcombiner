@@ -1,0 +1,20 @@
+{
+  "name": "gulp-svgcombiner",
+  "version": "1.0.0",
+  "description": "A gulp plugin for svgcombiner",
+  "main": "index.js",
+  "scripts": {
+    "test": "node_modules/.bin/ava test/*.js --verbose"
+  },
+  "author": "Larry Davis <lawdavis@adobe.com>",
+  "license": "BSD-2-Clause",
+  "dependencies": {
+    "through2": "^2.0.3",
+    "xtend": "^4.0.1",
+    "vinyl": "^2.1.0"
+  },
+  "devDependencies": {
+    "ava": "^0.25.0",
+    "xml-formatter": "^1.0.1"
+  }
+}
