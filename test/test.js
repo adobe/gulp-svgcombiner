@@ -14,7 +14,9 @@ var test = require('ava');
 var fs = require('fs');
 var format = require('xml-formatter');
 var path = require('path');
+var assert = require('stream-assert');
 var File = require('vinyl');
+var gulp = require('gulp');
 var vfs = require('vinyl-fs');
 var svgcombiner = require('../index.js');
 
@@ -47,6 +49,21 @@ test.cb('should emit error on streamed file', t => {
     });
 });
 
+test.cb('should take path file of last file', function(t) {
+  gulp.src([
+    'test/medium/S_UICheckboxCheckmark_12_N@1x.svg',
+    'test/large/S_UICheckboxCheckmark_12_N@1x.svg'
+  ])
+    .pipe(svgcombiner())
+    .pipe(assert.first(function(newFile) {
+      var newFilePath = path.resolve(newFile.path);
+      var expectedFilePath = path.resolve(path.join('test', 'large', 'S_UICheckboxCheckmark_12_N@1x.svg'));
+      t.is(newFilePath, expectedFilePath);
+    }))
+    .pipe(assert.end(function() {
+      t.end();
+    }));
+});
 
 test.cb('should define default processName and processClass', function(t) {
   // Create the fake files

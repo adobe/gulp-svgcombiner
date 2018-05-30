@@ -31,6 +31,7 @@ module.exports = function(options) {
 
   // Hash to hold all icons arranged by processed name
   var icons = {};
+  var fileObjs = {};
   var latestIcon = null;
 
   function gatherIcons(file, end, cb) {
@@ -55,6 +56,9 @@ module.exports = function(options) {
     icons[processedName] = icons[processedName] || {};
     icons[processedName][processedClass] = file.contents.toString('utf8');
 
+    // Store the file so we can clone it
+    fileObjs[processedName] = file;
+
     // Store the last icon we processed
     latestIcon = file;
 
@@ -70,13 +74,16 @@ module.exports = function(options) {
 
     // Run through hashmap
     for (var icon in icons) {
-      var file = new File(icon + '.svg');
+      // Clone the source file to get path information
+      var file = fileObjs[icon];
+      var combinedFile = file.clone({ contents: false });
+      combinedFile.path = path.join(file.base, icon + '.svg');
 
       // Combine all SVGs
-      file.contents = new Buffer(svgcombiner(icon, icons[icon]));
+      combinedFile.contents = new Buffer(svgcombiner(icon, icons[icon]));
 
       // Emit downstream
-      this.push(file);
+      this.push(combinedFile);
     }
 
     cb();
